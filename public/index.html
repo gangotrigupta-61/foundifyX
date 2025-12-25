@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusLost - Lost & Found Platform</title>
+<link rel="stylesheet"
+ href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="assets/foundify logo.png" type="image/png">
+  
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+  <div class="logo">
+    <img src="assets/foundify logo.png" alt="Foundify Logo">
+    <h1>
+      Foundify<span>X</span>
+    </h1>
+  </div>
+
+
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div id="toast" class="toast">Login Successful ✅</div>
+
+                
+                <nav class="mobile-menu" id="mobileMenu">
+                    <ul>
+                        <li><a href="#home" class="active">Home</a></li>
+                        <li><a href="#report">Report Item</a></li>
+                        <li><a href="#browse">Browse Items</a></li>
+                        <li><a href="#stats">Statistics</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li id="loginLi"><a href="login.html" id="loginBtn">Login</a></li>
+                        <li id="profileLi" style="display:none;"> <a href="profile.html" id="profileBtn">Profile</a></li>
+                     </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h3 id="userGreeting"></h3>
+
+        <div class="container">
+            <h2> 💙 Every item has its own Story </h2>
+            <p>From classrooms to cabins, hostels to offices — FoundifyX centralizes lost & found into one trusted platform, eliminating chaos and improving recovery through smart matching.</p>
+            <div class="cta-buttons">
+              <a href="#report">  <button class="btn btn-primary" id="reportLostBtn"  >
+                    <i class="fas fa-plus-circle"></i> Report Item 
+                </button>
+                </a>
+               <a href="#browse"> 
+                 <button class="btn btn-secondary" id="browseFoundBtn">
+                    <i class="fas fa-search"></i> Browse Items  
+                </button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search & Report Section -->
+    <section class="search-section" id="report">
+        <div class="container">
+            <div class="search-container">
+                <h3>Report a Lost or Found Item</h3>
+                <form class="search-form" id="itemForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemType">Item Type</label>
+                            <select id="itemType" required>
+                                <option value="">Select item type</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="books">Books & Notes</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="accessories">Accessories</option>
+                                <option value="keys">Keys & IDs</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemStatus">Status</label>
+                            <select id="itemStatus" required>
+                                <option value="">Lost or Found?</option>
+                                <option value="lost">I Lost This Item</option>
+                                <option value="found">I Found This Item</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" placeholder="e.g., Blue Water Bottle, MacBook Charger" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemDescription">Description</label>
+                        <textarea id="itemDescription" rows="3" placeholder="Provide details like brand, color, identifying marks, etc." required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" placeholder="Where was it lost/found?" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" required>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="userEmail">Your Email</label>
+                        <input type="email"id="userEmail"placeholder="Enter your email"required/>
+                    </div> -->
+                    
+                    
+
+                    <div class="form-group">
+                        <label>Upload Image (Optional)</label>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to upload an image of the item</p>
+                            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                        </div>
+                        <div id="imagePreview"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+     
+    <!-- Items Section -->
+    <section class="items-section" id="browse">
+        <div class="container">
+            <div class="section-header">
+                <h3>Recently Reported Items</h3>
+                <input type="text" id="searchInput"placeholder="Search item name..."class="search-box"/>
+                <div class="filter-buttons">
+           <button class="filter-btn active" data-status="all">All</button>
+           <button class="filter-btn" data-status="lost">Lost</button>
+           <button class="filter-btn" data-status="found">Found</button>
+        </div>
+
+        <div id="itemsContainer" class="items-grid"></div>
+            </div>
+            
+            <div class="items-grid" id="itemsGrid">
+                <!-- Items will be dynamically added here -->
+                 <section class="reported-items">
+           </div>
+            
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section" id="stats">
+        <div class="container">
+            <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem; color: var(--secondary);">Platform Statistics</h3>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="stat-number" id="totalItems">127</div>
+                    <div class="stat-text">Items Reported</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number" id="recoveredItems">42</div>
+                    <div class="stat-text">Items Recovered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="activeUsers">356</div>
+                    <div class="stat-text">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-number" id="recoveryRate">33%</div>
+                    <div class="stat-text">Recovery Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h1>FoundifyX</h1>
+                    <p>A dedicated platform for campus lost and found items. Helping to recover their belongings efficiently.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#report">Report Item</a></li>
+                        <li><a href="#browse">Browse Items</a></li>
+                        <li><a href="#stats">Statistics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> FoundifyX@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Lucknow</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 CampusLost. All rights reserved. | Designed for Campus, Offices  Use</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Item Details Modal -->
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModal">&times;</button>
+            <h3 id="modalTitle">Item Details</h3>
+            <div id="modalContent">
+                <!-- Modal content will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+ 
+
+
+ <script>
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const navLinks = mobileMenu.querySelectorAll("a");
+
+// Toggle menu
+mobileMenuBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("active");
+});
+
+// Handle nav click
+navLinks.forEach(link => {
+  link.addEventListener("click", () => {
+
+    // Remove active class from all
+    navLinks.forEach(l => l.classList.remove("active"));
+    link.classList.add("active");
+
+    // Close menu after click (IMPORTANT)
+    mobileMenu.classList.remove("active");
+  });
+});
+
+
+</script>
+
+
+
+ 
+<script type="module">
+import { auth } from "./js/firebase.js";
+import { onAuthStateChanged } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const loginLi = document.getElementById("loginLi");
+const profileLi = document.getElementById("profileLi");
+
+onAuthStateChanged(auth, (user) => {
+  console.log("AUTH USER:", user);
+
+  if (user) {
+    loginLi.style.display = "none";
+    profileLi.style.display = "block";
+  } else {
+    loginLi.style.display = "block";
+    profileLi.style.display = "none";
+  }
+});
+</script>
+
+
+
+
+
+<script type="module">
+import { db } from "./js/firebase.js";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const itemsContainer = document.getElementById("itemsContainer");
+const filterButtons = document.querySelectorAll(".filter-btn");
+
+let allItems = [];
+let currentFilter = "all";
+document.addEventListener("click", (e) => {
+  if (
+    e.target.classList.contains("claim-btn") ||
+    e.target.classList.contains("found-btn")
+  ) {
+    const email = e.target.dataset.email;
+
+    const subject = encodeURIComponent("Regarding your reported item");
+    const body = encodeURIComponent(
+      "Hello,\n\n\n\n I am contacting you regarding the item you reported on FoundifyX.\n\nPlease let me know how we can connect or meet.\n\nThanks."
+    );
+
+    const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+
+    window.open(gmailLink, "_blank");
+  }
+});
+
+// 🔥 Real-time Firestore
+const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
+
+onSnapshot(q, (snapshot) => {
+  allItems = [];
+
+  snapshot.forEach((doc) => {
+    allItems.push({
+      id: doc.id,        // ✅ Firestore document ID
+      ...doc.data()      // ✅ actual item data
+    });
+  });
+
+  renderItems();
+});
+
+
+// 🎨 Render function
+const searchInput = document.getElementById("searchInput");
+
+function renderItems() {
+  itemsContainer.innerHTML = "";
+
+  const searchText = searchInput.value.toLowerCase();
+
+  // ✅ ONLY FILTER LOGIC HERE
+  const filteredItems = allItems.filter(item => {
+    const matchStatus =
+      currentFilter === "all" || item.status === currentFilter;
+
+    const matchSearch =
+      item.title.toLowerCase().includes(searchText);
+
+    return matchStatus && matchSearch;
+  });
+
+  if (filteredItems.length === 0) {
+    itemsContainer.innerHTML = "<p>No items found</p>";
+    return;
+  }
+
+  // ✅ CARD CREATION HERE
+  filteredItems.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item-card";
+
+    // 🔥🔥 STEP-2 (MOST IMPORTANT LINE)
+    card.dataset.id = item.id;
+
+    let actionButton = "";
+
+    if (item.status === "found") {
+      actionButton = `
+        <button class="action-btn claim-btn" data-email="${item.userEmail}">
+          Claim Item
+        </button>
+      `;
+    }
+
+    if (item.status === "lost") {
+      actionButton = `
+        <button class="action-btn found-btn" data-email="${item.userEmail}">
+          I Found It
+        </button>
+      `;
+    }
+
+    card.innerHTML = `
+      <span class="status-badge ${item.status}">
+        ${item.status.toUpperCase()}
+      </span>
+
+      <img src="${item.image || 'placeholder.jpg'}">
+
+      <div class="content">
+        <h3>${item.title}</h3>
+        <p><strong>Location:</strong> ${item.location}</p>
+        ${actionButton}
+      </div>
+    `;
+
+    itemsContainer.appendChild(card);
+  });
+}
+
+// 🔍 Search listener
+searchInput.addEventListener("input", renderItems);
+
+// 🟢 Filter buttons
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentFilter = btn.dataset.status;
+    renderItems();
+  });
+});
+
+
+
+</script>
+<script type="module">
+import { db } from "./js/firebase.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// DOM Elements
+
+const reportLostBtn = document.getElementById('reportLostBtn');
+const browseFoundBtn = document.getElementById('browseFoundBtn');
+const itemForm = document.getElementById("itemForm");
+const uploadArea = document.getElementById("uploadArea");
+const imageUpload = document.getElementById("imageUpload");
+const imagePreview = document.getElementById("imagePreview");
+            
+
+// 1️⃣ Open file picker when clicking upload area
+uploadArea.addEventListener("click", () => {
+  imageUpload.click();
+});
+
+// 2️⃣ Show preview after selecting an image
+imageUpload.addEventListener("change", () => {
+  const file = imageUpload.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview Image" style="max-width:200px; border-radius:8px;">`;
+    imagePreview.style.display = "block";
+  };
+  reader.readAsDataURL(file);
+});
+async function uploadImageToCloudinary(file) {
+  const CLOUD_NAME = "dsidvrihf";
+  const UPLOAD_PRESET = "campus_lost";
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await response.json();
+  return data.secure_url;
+}
+
+function highlightMatchedCard(matchedDocId) {
+  const container = document.getElementById("itemsContainer");
+  const card = container.querySelector(
+    `.item-card[data-id="${matchedDocId}"]`
+  );
+
+  if (!card) return;
+
+  container.prepend(card);
+  card.classList.add("blink");
+
+  setTimeout(() => {
+    card.classList.remove("blink");
+  }, 3000);
+}
+
+
+
+ 
+
+// 4️⃣ Handle form submission
+import { auth } from "./js/firebase.js";
+import { findMatchingItem } from "./js/report.js";
+
+
+
+itemForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please login to report an item");
+    return;
+  }
+
+  const itemName = document.getElementById("itemName").value.trim();
+  const itemType = document.getElementById("itemType").value.trim().toLowerCase();
+  const itemStatus = document.getElementById("itemStatus").value;
+  const itemDescription = document.getElementById("itemDescription").value;
+  const location = document.getElementById("location").value.trim().toLowerCase();
+  const date = document.getElementById("date").value;
+  const imageFile = imageUpload.files[0];
+
+  let imageUrl = "";
+
+  try {
+    if (imageFile) {
+      imageUrl = await uploadImageToCloudinary(imageFile);
+    }
+
+    // 🔥 SAVE ITEM
+    const itemData = {
+      title: itemName,
+      itemType,
+      status: itemStatus,
+      description: itemDescription,
+      location,
+      date,
+      image: imageUrl,
+      uid: user.uid,
+      userEmail: user.email,
+      createdAt: serverTimestamp()
+    };
+
+    await addDoc(collection(db, "items"), itemData);
+
+    // ===============================
+    // ✅ MATCHING STARTS HERE
+    // ===============================
+    const matches = await findMatchingItem(itemData);
+
+    const matchedItem = matches[0];
+
+    console.log("MATCH RESULT:", matches);
+
+    if (matches.length > 0) {
+              const matchedItem = matches[0];
+
+      alert("🎉 Your item is successfully matched!");
+      console.log("🎉 Match found, creating notifications");
+    // Function to create hearts
+function createHearts() {
+  const heartIcons = ['❤️', '💖', '💕', '💗', '💓', '💞', '💝'];
+  
+  for (let i = 0; i < 50; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.textContent = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.top = '100vh';
+    heart.style.fontSize = (Math.random() * 30 + 15) + 'px';
+    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    heart.style.animationDelay = Math.random() * 1 + 's';
+    
+    document.body.appendChild(heart);
+    
+    // Remove heart after animation completes
+    setTimeout(() => {
+      heart.remove();
+      console.log("MATCHED ID:", matchResult.matchedId);
+    highlightMatchedCard(matchResult.matchedId);
+    }, 4000);
+  }
+}
+
+// Auto-close after 3 seconds and show hearts
+document.addEventListener('DOMContentLoaded', function() {
+  const popup = document.getElementById('matchPopup');
+  const okBtn = document.getElementById('popupOkBtn');
+  
+  if (popup && !popup.classList.contains('hidden')) {
+    // Show hearts
+    createHearts();
+    
+    // Auto-close after 3 seconds
+    setTimeout(() => {
+      popup.classList.add('hidden');
+    }, 3000);
+  }
+  
+  // Manual close button
+  if (okBtn) {
+    okBtn.addEventListener('click', function() {
+      popup.classList.add('hidden');
+    });
+  }
+  
+  // Optional: Close popup when clicking outside
+  popup.addEventListener('click', function(e) {
+    if (e.target === popup) {
+      popup.classList.add('hidden');
+    }
+  });
+});
+
+// Optional: If you want to trigger the popup programmatically
+function showMatchPopup() {
+  const popup = document.getElementById('matchPopup');
+  if (popup) {
+    popup.classList.remove('hidden');
+    createHearts();
+    
+    // Auto-close after 3 seconds
+    setTimeout(() => {
+      popup.classList.add('hidden');
+    }, 3000);
+  }
+}
+      // 🔔 Notify current user
+  await addDoc(collection(db, "notifications"), {
+    toUid: user.uid,
+    fromUid: matchedItem.uid,
+    message: "🎉 Your item has been successfully matched!",
+    read: false,
+    createdAt: serverTimestamp()
+  });
+
+  // 🔔 Notify matched user
+  await addDoc(collection(db, "notifications"), {
+    toUid: matchedItem.uid,
+    fromUid: user.uid,
+    message: "🔍 Someone reported an item that matches yours!",
+    read: false,
+    createdAt: serverTimestamp()
+  });
+
+
+showMatchPopup(matchedItem);
+
+
+
+  
+
+      showMatchPopup();
+      
+      // later you can replace this with popup
+    } 
+    else {
+      alert("✅ Item reported successfully!");
+    }
+
+    // ===============================
+    // RESET
+    // ===============================
+    itemForm.reset();
+    imagePreview.innerHTML = "";
+    imagePreview.style.display = "none";
+    document.getElementById("date").valueAsDate = new Date();
+
+  } catch (error) {
+    console.error("Error submitting item:", error);
+    alert("❌ Error submitting item. Check console.");
+  }
+});
+
+
+  
+function showMatchPopup() {
+  const popup = document.getElementById("matchPopup");
+  popup.classList.remove("hidden");
+
+  const okBtn = document.getElementById("popupOkBtn");
+  okBtn.onclick = () => {
+    const box = popup.querySelector(".popup-box");
+    box.style.animation = "popupOut 0.3s ease forwards";
+
+    setTimeout(() => {
+      popup.classList.add("hidden");
+      box.style.animation = "popupIn 0.4s ease";
+    }, 300);
+  };
+}
+
+</script>                  
+<!-- greeting msg handle -->
+<script type="module">
+  import { auth } from "./js/firebase.js";
+  import { onAuthStateChanged } from
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const greeting = document.getElementById("userGreeting");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const name = localStorage.getItem("userName") || "User";
+      greeting.innerText = `Hi, ${name} 👋`;
+    }
+  });
+</script>
+ 
+<script>
+  const toast = document.getElementById("toast");
+
+  if (localStorage.getItem("loginSuccess") === "true") {
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+      localStorage.removeItem("loginSuccess");
+    }, 3000);
+  }
+</script>
+  
+
+ 
+
+  
+<script>
+    async function uploadImageToCloudinary(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "campus_lost");
+
+  const response = await fetch(
+    "https://api.cloudinary.com/v1_1/dsidvrihf/image/upload",
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  const data = await response.json();
+  return data.secure_url; // IMAGE URL
+}
+</script>
+
+
+<!-- ✅ MATCH SUCCESS POPUP -->
+<div id="matchPopup" class="match-popup hidden">
+  <div class="popup-box">
+    <div class="success-icon">🎉</div>
+    <h2>Match Found!</h2>
+    <p>Your item matches with a previously reported item.</p>
+    <button id="popupOkBtn">OK</button>
+  </div>
+</div>
+ 
+    
+<script type="module" src="./js/firebase.js"></script>
+<script type="module" src="./js/auth.js"></script>
+<script type="module" src="./js/report.js"></script>
+
+
+<script type="module">
+  import { db } from "./js/firebase.js";
+  console.log("Firebase connected!", db);
+</script>
+</body>
+</html>
