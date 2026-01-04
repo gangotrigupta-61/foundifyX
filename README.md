@@ -9,7 +9,7 @@ FoundifyX simplifies reunions between owners and finders by combining a clean re
 The site is deployed and available at:
 ### MVP Link : https://campus-lost-found-476c7.web.app
 
-### Demo Video Link : https://youtu.be/A3H--iaEhVM
+### Demo Video Link : 
 
 ## Key goals of this repo:
 
@@ -22,55 +22,51 @@ Keep user contact details private by facilitating secure Gmail-based coordinatio
 ## Contributors
 
 - **[Gangotri Gupta](https://www.linkedin.com/in/gangotri-gupta-ba5764321/)**
-- **[Annu Verma](https://www.linkedin.com/in/annu-verma-link)**
-- **[Divyansh Pal](https://www.linkedin.com/in/divyansh-pal-link)**
+- **[Annu Verma](https://www.linkedin.com/in/annu-verma-41a873326)**
+- **[Divyansh Pal](https://www.linkedin.com/in/divyansh-pal-3b3abb31a/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)**
 
 
 
 
 ## Table of content
 
-overview
+- [Overview](#Overview)
+- [Contributors](#Contributors)
+- [Features](#Features)
+- [Goals](#Goals)
+- [TechStack](#TechStack)
 
-contributors
 
-table of content
 
-features
+## Features
 
-goals
-
-builtwith
-
-## features
-
-### Report item (Lost / Found):
+- ### Report item (Lost / Found):
 Submit item name, type, description, location, date and optional image.
 
-### Real-time matching:
+- ### Real-time matching:
 New reports are automatically checked against Firestore for potential matches and flagged to users.
 
-### Match notification: 
+- ### Match notification: 
 UI popup / dashboard notification when a probable match is found.
 
-### Private resolution via Gmail: 
+- ### Private resolution via Gmail: 
 "Claim / Found it" actions open the user's Gmail to privately coordinate handover without exposing raw contact details.
 
-### Browse & filter:
+- ### Browse & filter:
 View recent reports and filter by status (Lost / Found).
 
-### User dashboard: 
+- ### User dashboard: 
 Track your reported items and update lifecycle (Lost → Matched → Recovered).
 
-### Responsive frontend:
+- ### Responsive frontend:
 Works across desktop and mobile browsers.
 
-### Realtime counters / basic stats:
+- ### Realtime counters / basic stats:
 See platform activity (items reported, recovered, recovery rate).
 
-## goals
+## Goals
 
-### Short-term
+- ### Short-term
 
 Provide a reliable, easy reporting flow for users across a campus or office.
 
@@ -78,7 +74,7 @@ Ensure fast detection of likely matches so owners and finders can reconnect quic
 
 Keep all sensitive server-side logic and credentials out of the public repo (use environment configs and Firebase security rules).
 
-### Long-term / Planned
+- ### Long-term / Planned
 
 Add AI-assisted image-similarity matching to improve match accuracy.
 
@@ -88,15 +84,15 @@ Integrate a campus map for precise location reporting and visualization.
 
 Improve access controls and expand authentication options (e.g., SSO for institutions).
 
-## builtwith
+## TechStack
 
-### Frontend:
+- ### Frontend:
 HTML, CSS, JavaScript (responsive static site)
 
-### Firebase:
+- ### Firebase:
 Authentication (email/password), Cloud Firestore (real-time DB), Hosting (static site), Cloud Functions (match logic / background tasks)
 
-### Deployment:
+- ### Deployment:
 Firebase Hosting
 
 
