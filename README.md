@@ -1,17 +1,17 @@
-FoundifyX — Campus Lost & Found
+# FoundifyX — Campus Lost & Found
 
 A centralized Lost & Found web platform for campuses, offices, hostels and multi-storey buildings. FoundifyX lets users report lost or found items, automatically checks new reports against existing records in Firestore, and helps coordinate safe, private handovers via Gmail.
 
-overview
+## overview
 
 FoundifyX simplifies reunions between owners and finders by combining a clean reporting UI, real-time matching against a cloud datastore (Firestore), and private resolution through the user's Gmail. 
 
 The site is deployed and available at:
-MVP Link : https://campus-lost-found-476c7.web.app
+### MVP Link : https://campus-lost-found-476c7.web.app
 
-Demo Video Link : https://youtu.be/A3H--iaEhVM
+### Demo Video Link : https://youtu.be/A3H--iaEhVM
 
-Key goals of this repo:
+## Key goals of this repo:
 
 Provide an easy-to-use frontend for reporting & browsing lost/found items.
 
@@ -19,7 +19,7 @@ Run fast, real-time matching checks so matches are discovered quickly.
 
 Keep user contact details private by facilitating secure Gmail-based coordination.
 
-contributors:
+## contributors:
 
 Gangotri Gupta
 Annu Verma
@@ -27,7 +27,7 @@ Divyansh Pal
 
 
 
-table of content
+## table of content
 
 overview
 
@@ -41,27 +41,35 @@ goals
 
 builtwith
 
-features
+## features
 
-Report item (Lost / Found): Submit item name, type, description, location, date and optional image.
+### Report item (Lost / Found):
+Submit item name, type, description, location, date and optional image.
 
-Real-time matching: New reports are automatically checked against Firestore for potential matches and flagged to users.
+### Real-time matching:
+New reports are automatically checked against Firestore for potential matches and flagged to users.
 
-Match notification: UI popup / dashboard notification when a probable match is found.
+### Match notification: 
+UI popup / dashboard notification when a probable match is found.
 
-Private resolution via Gmail: "Claim / Found it" actions open the user's Gmail to privately coordinate handover without exposing raw contact details.
+### Private resolution via Gmail: 
+"Claim / Found it" actions open the user's Gmail to privately coordinate handover without exposing raw contact details.
 
-Browse & filter: View recent reports and filter by status (Lost / Found).
+### Browse & filter:
+View recent reports and filter by status (Lost / Found).
 
-User dashboard: Track your reported items and update lifecycle (Lost → Matched → Recovered).
+### User dashboard: 
+Track your reported items and update lifecycle (Lost → Matched → Recovered).
 
-Responsive frontend: Works across desktop and mobile browsers.
+### Responsive frontend:
+Works across desktop and mobile browsers.
 
-Realtime counters / basic stats: See platform activity (items reported, recovered, recovery rate).
+### Realtime counters / basic stats:
+See platform activity (items reported, recovered, recovery rate).
 
-goals
+## goals
 
-Short-term
+### Short-term
 
 Provide a reliable, easy reporting flow for users across a campus or office.
 
@@ -69,7 +77,7 @@ Ensure fast detection of likely matches so owners and finders can reconnect quic
 
 Keep all sensitive server-side logic and credentials out of the public repo (use environment configs and Firebase security rules).
 
-Long-term / Planned
+### Long-term / Planned
 
 Add AI-assisted image-similarity matching to improve match accuracy.
 
@@ -79,19 +87,22 @@ Integrate a campus map for precise location reporting and visualization.
 
 Improve access controls and expand authentication options (e.g., SSO for institutions).
 
-builtwith
+## builtwith
 
-Frontend: HTML, CSS, JavaScript (responsive static site)
+### Frontend:
+HTML, CSS, JavaScript (responsive static site)
 
-Firebase: Authentication (email/password), Cloud Firestore (real-time DB), Hosting (static site), Cloud Functions (match logic / background tasks)
+### Firebase:
+Authentication (email/password), Cloud Firestore (real-time DB), Hosting (static site), Cloud Functions (match logic / background tasks)
 
-Deployment: Firebase Hosting
+### Deployment:
+Firebase Hosting
 
 
 
 
 
-Every lost item carries a story — FoundifyX exists to help it find its way home.
-Built with empathy, technology, and the belief that small solutions can create meaningful impact.
+### Every lost item carries a story — FoundifyX exists to help it find its way home.
+### Built with empathy, technology, and the belief that small solutions can create meaningful impact.
 
-ThankYou!!
+## ThankYou!!
