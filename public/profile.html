@@ -6,10 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="assets/foundify logo.png" type="image/png">
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
+  
   <style>
     :root {
       --primary: #2563eb;
@@ -195,15 +192,87 @@
 }
 .btn-logout:hover { opacity: 0.9; }
 
+.item-card.highlight {
+  border-left: 6px solid #22c55e;
+  box-shadow: 0 0 0 4px rgba(34,197,94,0.3);
+  animation: pulse 1.2s ease-in-out 2;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.notif {
+  cursor: pointer;
+}
+.notif-badge {
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 50px;
+  margin-left: 8px;
+  display: none;
+}
+/* 🔍 MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  max-width: 450px;
+  width: 90%;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.modal-content img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.close-btn {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ✨ HIGHLIGHT */
+.highlight {
+  border: 3px solid #4CAF50;
+  box-shadow: 0 0 20px #4CAF50;
+}
+.modal-content {
+  touch-action: pan-y;
+}
+
 
   </style>
 </head>
 <body>
 
 <header>
-  <h1>CampusLost</h1>
-</header>
+        <div class="container">
+            <div class="header-content">
 
+    <h1>
+      Foundify<span>X</span>
+    </h1>
+  </div>
 <div class="container">
 
   <!-- Profile -->
@@ -230,13 +299,33 @@
 
 
 
-<h3>Notifications</h3>
+<h3>
+  Notifications
+  <span id="notifBadge" class="notif-badge">0</span>
+</h3>
+
 <div id="notifications"></div>
 
 
 
 
 </div>
+<!-- 🔍 ITEM DETAIL MODAL -->
+<div id="itemModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+
+
+    <img id="modalImage" />
+    <h2 id="modalTitle"></h2>
+
+    <p><b>Status:</b> <span id="modalStatus"></span></p>
+    <p><b>Location:</b> <span id="modalLocation"></span></p>
+    <p><b>Description:</b></p>
+    <p id="modalDescription"></p>
+  </div>
+</div>
+
 
 <script type="module" src="./js/profile.js"></script>
 <script type="module" src="./js/auth.js"></script>

@@ -38,8 +38,24 @@
                         <li><a href="#stats">Statistics</a></li>
                         <li><a href="#contact">Contact</a></li>
                         <li id="loginLi"><a href="login.html" id="loginBtn">Login</a></li>
-                        <li id="profileLi" style="display:none;"> <a href="profile.html" id="profileBtn">Profile</a></li>
+<!-- PROFILE + NOTIFICATION -->
+<li id="profileLi" style="display:none;">
+  <a href="profile.html" id="profileLink" class="nav-profile">
+    <span class="profile-text">Profile</span>
+
+    <!-- 🔴 red dot (shows when unread > 0) -->
+    <span id="notifDot" class="notif-dot hidden"></span>
+
+    <!-- 🔢 numeric badge -->
+    <span id="notifBadge" class="notif-badge hidden">0</span>
+  </a>
+</li>
+
+                        
                      </ul>
+                     
+                     
+                     
                 </nav>
             </div>
         </div>
@@ -314,6 +330,48 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 
 let allItems = [];
 let currentFilter = "all";
+
+/**
+ * Universal email opener (Desktop + Mobile)
+ * Opens Gmail app / Mail app / Gmail web safely
+ */
+function openEmailCompose({ to, subject = "", body = "" }) {
+  const enc = s => encodeURIComponent(s || "");
+
+  const mailto = `mailto:${to}?subject=${enc(subject)}&body=${enc(body)}`;
+  const gmailWeb = `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(to)}&su=${enc(subject)}&body=${enc(body)}`;
+  const gmailIOS = `googlegmail://co?to=${enc(to)}&subject=${enc(subject)}&body=${enc(body)}`;
+
+  const ua = navigator.userAgent;
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+  if (isAndroid) {
+    // Try Gmail app (Android)
+    const intent = `intent://compose?to=${enc(to)}&subject=${enc(subject)}&body=${enc(body)}#Intent;scheme=mailto;package=com.google.android.gm;end`;
+    window.location.href = intent;
+
+    // fallback
+    setTimeout(() => window.location.href = mailto, 700);
+    return;
+  }
+
+  if (isIOS) {
+    // Try Gmail app first
+    window.location.href = gmailIOS;
+
+    // fallback to mail app
+    setTimeout(() => window.location.href = mailto, 600);
+    return;
+  }
+
+  // Desktop fallback
+  window.open(gmailWeb, "_blank");
+}
+
+/**
+ * Button click handler (Claim / Found)
+ */
 document.addEventListener("click", (e) => {
   if (
     e.target.classList.contains("claim-btn") ||
@@ -321,16 +379,16 @@ document.addEventListener("click", (e) => {
   ) {
     const email = e.target.dataset.email;
 
-    const subject = encodeURIComponent("Regarding your reported item");
-    const body = encodeURIComponent(
-      "Hello,\n\n\n\n I am contacting you regarding the item you reported on FoundifyX.\n\nPlease let me know how we can connect or meet.\n\nThanks."
-    );
-
-    const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
-
-    window.open(gmailLink, "_blank");
+    openEmailCompose({
+      to: email,
+      subject: "Regarding your reported item",
+      body:
+        "Hello,\n\n\n I am contacting you regarding the item you reported on FoundifyX.\n\nPlease let me know how we can connect.\n\nThanks."
+    });
   }
 });
+
+
 
 // 🔥 Real-time Firestore
 const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
@@ -404,7 +462,7 @@ function renderItems() {
         ${item.status.toUpperCase()}
       </span>
 
-      <img src="${item.image || 'placeholder.jpg'}">
+      <img src="${item.image }">
 
       <div class="content">
         <h3>${item.title}</h3>
@@ -637,24 +695,27 @@ function showMatchPopup() {
     }, 3000);
   }
 }
-      // 🔔 Notify current user
-  await addDoc(collection(db, "notifications"), {
-    toUid: user.uid,
-    fromUid: matchedItem.uid,
-    message: "🎉 Your item has been successfully matched!",
-    read: false,
-    createdAt: serverTimestamp()
-  });
+     // 🔔 Notify current user
+    await addDoc(collection(db, "notifications"), {
+      toUid: user.uid,
+      fromUid: matchedItem.uid,
+      message: "🎉 Your item has been successfully matched!",
+      read: false,
+      createdAt: serverTimestamp(),
+      matchedItemId: matchedItem.id // optional, helps user see which item matched
+    });
 
-  // 🔔 Notify matched user
-  await addDoc(collection(db, "notifications"), {
-    toUid: matchedItem.uid,
-    fromUid: user.uid,
-    message: "🔍 Someone reported an item that matches yours!",
-    read: false,
-    createdAt: serverTimestamp()
-  });
+    // 🔔 Notify matched user
+    await addDoc(collection(db, "notifications"), {
+      toUid: matchedItem.uid,
+      fromUid: user.uid,
+      message: "🔍 Someone reported an item that matches yours!",
+      read: false,
+      createdAt: serverTimestamp(),
+      matchedItemId: matchedItem.id // important for linking notification to item
+    });
 
+  
 
 showMatchPopup(matchedItem);
 

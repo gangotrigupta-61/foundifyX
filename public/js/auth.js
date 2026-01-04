@@ -10,62 +10,52 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   onAuthStateChanged,
-  signOut
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
   doc,
   setDoc,
+  serverTimestamp,
   collection,
-  addDoc,
-  serverTimestamp
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  getDocs,
+  writeBatch
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // =======================
-// Helpers
+// HELPERS
 // =======================
 
-/**
- * Map common Firebase auth error codes to friendly messages.
- * Add more mappings if you see other codes in console.
- */
 function mapAuthError(code) {
   const map = {
-    // sign-in
-    "auth/wrong-password": "Incorrect password. Please try again.",
+    "auth/wrong-password": "Incorrect password.",
     "auth/user-not-found": "No account found with this email.",
-    "auth/invalid-email": "Email address is invalid. Check spelling.",
-    "auth/too-many-requests": "Too many failed attempts. Try again later.",
-
-    // sign-up
-    "auth/email-already-in-use": "This email is already in use. Try logging in.",
-    "auth/weak-password": "Password is too weak. Use at least 6 characters.",
-
-    // reset
-    "auth/invalid-recipient-email": "The email address for password reset is invalid.",
-    "auth/invalid-action-code": "Invalid action code.",
-    "auth/expired-action-code": "Reset link expired. Request a new one.",
-
-    // fallback
-    "default": "Authentication failed. Please try again."
+    "auth/invalid-email": "Invalid email address.",
+    "auth/email-already-in-use": "Email already registered.",
+    "auth/weak-password": "Password must be at least 6 characters.",
+    "default": "Authentication failed."
   };
-
-  return map[code] || map["default"];
+  return map[code] || map.default;
 }
 
 function showLoginError(msg) {
-  const loginError = document.getElementById("loginError");
-  if (loginError) {
-    loginError.textContent = msg;
-    loginError.style.display = "block";
+  const el = document.getElementById("loginError");
+  if (el) {
+    el.textContent = msg;
+    el.style.display = "block";
   } else {
-    // fallback to alert if the element doesn't exist
     alert(msg);
   }
 }
 
 // =======================
-// SIGN UP
+// SIGNUP
 // =======================
 
 const signupForm = document.getElementById("signupForm");
@@ -74,31 +64,24 @@ if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = signupForm.name.value.trim();
-    const email = signupForm.email.value.trim();
-    const password = signupForm.password.value;
-
-    if (!name || !email || !password) {
-      alert("Please complete all required fields.");
-      return;
-    }
+    const { name, email, password } = signupForm;
 
     try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const cred = await createUserWithEmailAndPassword(
+        auth,
+        email.value.trim(),
+        password.value
+      );
 
-      await setDoc(doc(db, "users", userCred.user.uid), {
-        name,
-        email,
-        createdAt: new Date().toISOString()
+      await setDoc(doc(db, "users", cred.user.uid), {
+        name: name.value.trim(),
+        email: email.value.trim(),
+        createdAt: serverTimestamp()
       });
 
-      alert("Signup Successful");
       window.location.href = "login.html";
-
-    } catch (error) {
-      console.error("SIGNUP ERROR:", error);
-      const friendly = mapAuthError(error.code);
-      alert(friendly);
+    } catch (err) {
+      alert(mapAuthError(err.code));
     }
   });
 }
@@ -109,45 +92,103 @@ if (signupForm) {
 
 const loginForm = document.getElementById("loginForm");
 
-// Optional inline error container: add this to login.html near the form:
-// <div id="loginError" style="color:#f44336; margin:8px 0; display:none"></div>
-
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // hide previous inline error if present
-    const loginErrorElem = document.getElementById("loginError");
-    if (loginErrorElem) loginErrorElem.style.display = "none";
-
-    const email = (document.getElementById("loginEmail") || {}).value || "";
-    const password = (document.getElementById("loginPassword") || {}).value || "";
+    const email = document.getElementById("loginEmail")?.value;
+    const password = document.getElementById("loginPassword")?.value;
 
     if (!email || !password) {
-      showLoginError("Please enter both email and password.");
+      showLoginError("Enter email & password");
       return;
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // safe Firestore write to indicate login (you already had this)
-      await setDoc(doc(db, "test_login", user.uid), {
-        email: user.email,
-        uid: user.uid,
-        loginAt: new Date().toISOString()
-      });
-
+      await signInWithEmailAndPassword(auth, email, password);
       window.location.href = "index.html";
-
-    } catch (error) {
-      console.error("LOGIN ERROR:", error);
-      const friendly = mapAuthError(error.code);
-      showLoginError(friendly);
+    } catch (err) {
+      showLoginError(mapAuthError(err.code));
     }
   });
 }
+
+// =======================
+// 🔔 PROFILE NOTIFICATION BADGE LOGIC
+// =======================
+
+const profileLi   = document.getElementById("profileLi");
+const profileLink = document.getElementById("profileLink");
+const notifDot    = document.getElementById("notifDot");
+const notifBadge  = document.getElementById("notifBadge");
+
+let unsubscribeNotifications = null;
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    if (profileLi) profileLi.style.display = "none";
+    if (unsubscribeNotifications) unsubscribeNotifications();
+    return;
+  }
+
+  // show profile
+  if (profileLi) profileLi.style.display = "block";
+
+  const q = query(
+    collection(db, "notifications"),
+    where("toUid", "==", user.uid),
+    orderBy("createdAt", "desc")
+  );
+
+  unsubscribeNotifications = onSnapshot(q, (snapshot) => {
+    const notifications = snapshot.docs.map(d => ({
+      id: d.id,
+      ...d.data()
+    }));
+
+    const unreadCount = notifications.filter(n => n.read === false).length;
+
+    // 🔴 red dot
+    if (notifDot) {
+      notifDot.classList.toggle("hidden", unreadCount === 0);
+    }
+
+    // 🔢 badge
+    if (notifBadge) {
+      if (unreadCount > 0) {
+        notifBadge.textContent = unreadCount > 9 ? "9+" : unreadCount;
+        notifBadge.classList.remove("hidden");
+      } else {
+        notifBadge.classList.add("hidden");
+      }
+    }
+  });
+});
+
+// =======================
+// MARK NOTIFICATIONS READ ON PROFILE CLICK
+// =======================
+
+profileLink?.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const q = query(
+    collection(db, "notifications"),
+    where("toUid", "==", user.uid),
+    where("read", "==", false)
+  );
+
+  const snap = await getDocs(q);
+  if (snap.empty) return;
+
+  const batch = writeBatch(db);
+  snap.forEach(d => {
+    batch.update(doc(db, "notifications", d.id), { read: true });
+  });
+
+  await batch.commit();
+});
 
 // =======================
 // LOGOUT
@@ -157,14 +198,67 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+  });
+}
+
+// =======================
+// PASSWORD RESET
+// =======================
+
+const resetForm = document.getElementById("resetForm");
+
+if (resetForm) {
+  resetForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("resetEmail")?.value.trim();
+    if (!email) return alert("Enter your email");
+
     try {
-      await signOut(auth);
-      window.location.href = "index.html"; // or "login.html"
+      await sendPasswordResetEmail(auth, email);
+      alert("✅ Reset link sent to email");
     } catch (err) {
-      console.error("Sign out error:", err);
-      alert("Could not log out: " + (err.message || err));
+      alert(mapAuthError(err.code));
     }
   });
 }
 
+// =======================
+// GOOGLE LOGIN
+// =======================
 
+const googleBtn = document.getElementById("googleLoginBtn");
+
+if (googleBtn) {
+  googleBtn.addEventListener("click", async () => {
+    googleBtn.disabled = true;
+
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+          provider: "google",
+          createdAt: serverTimestamp()
+        },
+        { merge: true }
+      );
+
+      window.location.href = "index.html";
+    } catch (err) {
+      if (err.code !== "auth/popup-closed-by-user") {
+        alert(err.message);
+      }
+    } finally {
+      googleBtn.disabled = false;
+    }
+  });
+}
