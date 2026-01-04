@@ -2,7 +2,7 @@
 
 A centralized Lost & Found web platform for campuses, offices, hostels and multi-storey buildings. FoundifyX lets users report lost or found items, automatically checks new reports against existing records in Firestore, and helps coordinate safe, private handovers via Gmail.
 
-## overview
+## Overview
 
 FoundifyX simplifies reunions between owners and finders by combining a clean reporting UI, real-time matching against a cloud datastore (Firestore), and private resolution through the user's Gmail. 
 
@@ -19,15 +19,16 @@ Run fast, real-time matching checks so matches are discovered quickly.
 
 Keep user contact details private by facilitating secure Gmail-based coordination.
 
-## contributors:
+## Contributors
 
-Gangotri Gupta
-Annu Verma
-Divyansh Pal
+- **[Gangotri Gupta](https://www.linkedin.com/in/gangotri-gupta-ba5764321/)**
+- **[Annu Verma](https://www.linkedin.com/in/annu-verma-link)**
+- **[Divyansh Pal](https://www.linkedin.com/in/divyansh-pal-link)**
 
 
 
-## table of content
+
+## Table of content
 
 overview
 
