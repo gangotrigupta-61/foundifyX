@@ -9,7 +9,7 @@ FoundifyX simplifies reunions between owners and finders by combining a clean re
 The site is deployed and available at:
 ### MVP Link : https://campus-lost-found-476c7.web.app
 
-### Demo Video Link : https://youtu.be/kDD05jo3-6
+### Demo Video Link : https://drive.google.com/file/d/1DFR3w1Ql7bMuuNsjP1ixv8VdlMLOeq8u/view?usp=sharing
 
 ## Key goals of this repo:
 
